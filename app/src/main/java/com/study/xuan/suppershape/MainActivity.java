@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.study.xuan.shapebuilder.shape.ShapeBuilder;
+import com.study.xuan.shapebuilder.shape.ShapeListBuilder;
+
 import static android.graphics.drawable.GradientDrawable.RECTANGLE;
 
 public class MainActivity extends AppCompatActivity{
@@ -25,29 +27,16 @@ public class MainActivity extends AppCompatActivity{
                 .Type(RECTANGLE)
                 .Soild(Color.RED);
         Log.i("builder", builder1 == builder2 ? "true" : "false");
-        Log.i("drawable", builder1.Soild(Color.BLACK).getDrawable() == builder2.Soild(Color.RED).getDrawable() ? "true" : "false");
-       /* ShapeListBuilder.create()
-                .addShape(builder1.Soild(Color.YELLOW).getDrawable(), -android.R.attr.state_selected)
-                .addShape(builder2.Soild(Color.BLUE).getDrawable(), android.R.attr.state_selected)
-                .addShape(builder1.getDrawable(), android.R.attr.state_enabled)
-                .build(findViewById(R.id.tv1));*/
-
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        // 明确指定状态，当没有选中的时候
-        stateListDrawable.addState(new int[]{android.R.attr.state_selected}, builder1.getDrawable());
-        stateListDrawable.addState(new int[]{-android.R.attr.state_selected},builder2.getDrawable());
-
-
-        final TextView tv = (TextView) findViewById(R.id.tv2);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            tv.setBackground(stateListDrawable);
-            //tv.setBackgroundResource(R.drawable.aa);
-        }
-        tv.setOnClickListener(new View.OnClickListener() {
+        Log.i("drawable", builder1.Soild(Color.BLACK).build() == builder2.Soild(Color.RED).build() ? "true" : "false");
+        ShapeListBuilder.create(builder1.build())
+                .addShape(builder2.Soild(Color.BLUE).build(), android.R.attr.state_selected)
+                .build(findViewById(R.id.tv1));
+        findViewById(R.id.tv1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv.setSelected(!tv.isSelected());
+                findViewById(R.id.tv1).setSelected(!findViewById(R.id.tv1).isSelected());
             }
         });
+
     }
 }
