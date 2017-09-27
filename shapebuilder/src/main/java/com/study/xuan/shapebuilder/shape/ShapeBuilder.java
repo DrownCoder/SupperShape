@@ -2,7 +2,13 @@ package com.study.xuan.shapebuilder.shape;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Author : xuan.
@@ -12,9 +18,13 @@ import android.view.View;
 
 public class ShapeBuilder{
     private GradientDrawable drawable;
+    private Map<String, Object[]> operate;
 
     public ShapeBuilder() {
         drawable = new GradientDrawable();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            operate = new LinkedHashMap<>();
+        }
     }
 
     public static ShapeBuilder create() {
@@ -27,6 +37,7 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Type(int type) {
         drawable.setShape(type);
+        addMethod("Type", type);
         return this;
     }
 
@@ -37,6 +48,7 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Stroke(int px, int color) {
         drawable.setStroke(px, color);
+        addMethod("Stroke", px, color);
         return this;
     }
 
@@ -49,6 +61,7 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Stroke(int px, int color, int dashWidth, int dashGap) {
         drawable.setStroke(px, color, dashWidth, dashGap);
+        addMethod("Stroke", px, color, dashWidth, dashGap);
         return this;
     }
 
@@ -58,6 +71,7 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Soild(int color) {
         drawable.setColor(color);
+        addMethod("Soild", color);
         return this;
     }
 
@@ -67,6 +81,7 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Radius(float px) {
         drawable.setCornerRadius(px);
+        addMethod("Radius", px);
         return this;
     }
 
@@ -80,6 +95,7 @@ public class ShapeBuilder{
     public ShapeBuilder Radius(float topleft, float topright, float botleft, float botright) {
         drawable.setCornerRadii(new float[]{topleft, topleft, topright, topright, botleft,
                 botleft, botright, botright});
+        addMethod("Radius", topleft, topright, botleft, botright);
         return this;
     }
 
@@ -90,10 +106,8 @@ public class ShapeBuilder{
      * @param endColor 结束颜色
      */
     public ShapeBuilder Gradient(int startColor, int centerColor, int endColor) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            drawable.setColors(new int[]{startColor, centerColor, endColor});
-        }
-        return this;
+        return GradientInit(GradientDrawable.Orientation.TOP_BOTTOM, startColor, centerColor,
+                endColor);
     }
 
     /**
@@ -153,11 +167,21 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Gradient(GradientDrawable.Orientation orientation, int startColor, int
             centerColor, int endColor) {
+        return GradientInit(orientation, startColor, centerColor, endColor);
+    }
+
+    private ShapeBuilder GradientInit(GradientDrawable.Orientation orientation, int startColor, int
+            centerColor, int endColor) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             drawable.setOrientation(orientation);
+            drawable.setColors(new int[]{startColor, centerColor, endColor});
+        } else {
+            drawable = new GradientDrawable(orientation, new int[]{startColor, centerColor,
+                    endColor});
         }
-        return Gradient(startColor, centerColor, endColor);
+        return this;
     }
+
 
     /**
      * 渐变type
@@ -168,6 +192,7 @@ public class ShapeBuilder{
      */
     public ShapeBuilder GradientType(int type) {
         drawable.setGradientType(type);
+        addMethod("GradientType", type);
         return this;
     }
 
@@ -179,6 +204,7 @@ public class ShapeBuilder{
      */
     public ShapeBuilder GradientCenter(float x, float y) {
         drawable.setGradientCenter(x, y);
+        addMethod("GradientCenter", x, y);
         return this;
     }
 
@@ -189,6 +215,7 @@ public class ShapeBuilder{
      */
     public ShapeBuilder GradientRadius(float radius) {
         drawable.setGradientRadius(radius);
+        addMethod("GradientRadius", radius);
         return this;
     }
 
@@ -200,6 +227,7 @@ public class ShapeBuilder{
      */
     public ShapeBuilder setSize(int width, int height) {
         drawable.setSize(width, height);
+        addMethod("setSize", width, height);
         return this;
     }
 
@@ -207,8 +235,11 @@ public class ShapeBuilder{
      * 传入View，设置Bac
      */
     public void build(View v) {
+        build();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             v.setBackground(drawable);
+        } else {
+            v.setBackgroundDrawable(drawable);
         }
     }
 
@@ -216,6 +247,38 @@ public class ShapeBuilder{
      * 返回构建的drawable
      */
     public GradientDrawable build() {
+        operateMethod();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return drawable;
+        } else {
+            operateMethod();
+        }
         return drawable;
+    }
+
+    private void operateMethod() {
+        try {
+            Class c = Class.forName("ShapeBuilder");
+            for (Map.Entry<String, Object[]> entry : operate.entrySet()) {
+                Method m = c.getMethod("Stroke");
+                m.invoke(drawable, entry.getValue());
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void addMethod(String methodName, Object... params) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            operate.put(methodName, params);
+        }
+        operate.put(methodName, params);
     }
 }
