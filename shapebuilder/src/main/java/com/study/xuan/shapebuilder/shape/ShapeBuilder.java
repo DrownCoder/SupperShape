@@ -2,13 +2,7 @@ package com.study.xuan.shapebuilder.shape;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Author : xuan.
@@ -18,12 +12,11 @@ import java.util.Map;
 
 public class ShapeBuilder{
     private GradientDrawable drawable;
-    private Map<String, Object[]> operate;
-
+    private AttrContainer container;
     public ShapeBuilder() {
         drawable = new GradientDrawable();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            operate = new LinkedHashMap<>();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            container = new AttrContainer();
         }
     }
 
@@ -37,7 +30,9 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Type(int type) {
         drawable.setShape(type);
-        addMethod("Type", type);
+        if (container != null) {
+            container.type = type;
+        }
         return this;
     }
 
@@ -48,7 +43,10 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Stroke(int px, int color) {
         drawable.setStroke(px, color);
-        addMethod("Stroke", px, color);
+        if (container != null) {
+            container.stokewidth = px;
+            container.stokeColor = color;
+        }
         return this;
     }
 
@@ -61,7 +59,12 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Stroke(int px, int color, int dashWidth, int dashGap) {
         drawable.setStroke(px, color, dashWidth, dashGap);
-        addMethod("Stroke", px, color, dashWidth, dashGap);
+        if (container != null) {
+            container.stokewidth = px;
+            container.stokeColor = color;
+            container.dashWidth = dashWidth;
+            container.dashGap = dashGap;
+        }
         return this;
     }
 
@@ -71,7 +74,9 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Soild(int color) {
         drawable.setColor(color);
-        addMethod("Soild", color);
+        if (container != null) {
+            container.soild = color;
+        }
         return this;
     }
 
@@ -81,7 +86,9 @@ public class ShapeBuilder{
      */
     public ShapeBuilder Radius(float px) {
         drawable.setCornerRadius(px);
-        addMethod("Radius", px);
+        if (container != null) {
+            container.setRadius(px, px, px, px);
+        }
         return this;
     }
 
@@ -95,7 +102,9 @@ public class ShapeBuilder{
     public ShapeBuilder Radius(float topleft, float topright, float botleft, float botright) {
         drawable.setCornerRadii(new float[]{topleft, topleft, topright, topright, botleft,
                 botleft, botright, botright});
-        addMethod("Radius", topleft, topright, botleft, botright);
+        if (container != null) {
+            container.setRadius(topleft, topright, botleft, botright);
+        }
         return this;
     }
 
@@ -170,6 +179,10 @@ public class ShapeBuilder{
         return GradientInit(orientation, startColor, centerColor, endColor);
     }
 
+    /**
+     * 兼容低版本，重新构造drawable，对应调用operateMethod方法重新build，
+     * 保证新的drawable与原始drawabel相同
+     */
     private ShapeBuilder GradientInit(GradientDrawable.Orientation orientation, int startColor, int
             centerColor, int endColor) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -192,7 +205,9 @@ public class ShapeBuilder{
      */
     public ShapeBuilder GradientType(int type) {
         drawable.setGradientType(type);
-        addMethod("GradientType", type);
+        if (container != null) {
+            container.gradientType = type;
+        }
         return this;
     }
 
@@ -204,7 +219,10 @@ public class ShapeBuilder{
      */
     public ShapeBuilder GradientCenter(float x, float y) {
         drawable.setGradientCenter(x, y);
-        addMethod("GradientCenter", x, y);
+        if (container != null) {
+            container.gradientCenterX = x;
+            container.gradientCenterY = y;
+        }
         return this;
     }
 
@@ -215,7 +233,9 @@ public class ShapeBuilder{
      */
     public ShapeBuilder GradientRadius(float radius) {
         drawable.setGradientRadius(radius);
-        addMethod("GradientRadius", radius);
+        if (container != null) {
+            container.gradinetRadius = radius;
+        }
         return this;
     }
 
@@ -227,7 +247,10 @@ public class ShapeBuilder{
      */
     public ShapeBuilder setSize(int width, int height) {
         drawable.setSize(width, height);
-        addMethod("setSize", width, height);
+        if (container != null) {
+            container.width = width;
+            container.height = height;
+        }
         return this;
     }
 
@@ -247,7 +270,6 @@ public class ShapeBuilder{
      * 返回构建的drawable
      */
     public GradientDrawable build() {
-        operateMethod();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             return drawable;
         } else {
@@ -256,29 +278,44 @@ public class ShapeBuilder{
         return drawable;
     }
 
+    /**
+     * Build.VERSION_CODES.JELLY_BEAN（4.1）以下渐变需要重新构造drawable，所以需要重新build
+     */
     private void operateMethod() {
-        try {
-            Class c = Class.forName("ShapeBuilder");
-            for (Map.Entry<String, Object[]> entry : operate.entrySet()) {
-                Method m = c.getMethod("Stroke");
-                m.invoke(drawable, entry.getValue());
+        if (container != null) {
+            this.Type(container.type)
+                .Stroke(container.stokewidth, container.stokeColor, container.dashWidth,
+                            container.dashGap)
+                .Radius(container.topLeft,container.topRight,container.botLeft,container.botRight)
+                .setSize(container.width,container.height)
+                .GradientType(container.gradientType)
+                .GradientCenter(container.gradientCenterX,container.gradientCenterY)
+                .GradientRadius(container.gradinetRadius);
+            if (container.soild != 0) {
+                Soild(container.soild);
             }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
-
     }
 
-    private void addMethod(String methodName, Object... params) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            operate.put(methodName, params);
+    private class AttrContainer {
+        public int type;
+        public int stokewidth;
+        public int stokeColor;
+        public int dashWidth;
+        public int dashGap;
+        public int soild;
+        public float topLeft, topRight, botLeft, botRight;
+        public int width, height;
+        public int gradientType;
+        public float gradinetRadius;
+
+        public float gradientCenterX, gradientCenterY;
+
+        private void setRadius(float topleft, float topright, float botleft, float botright) {
+            this.topLeft = topleft;
+            this.topRight = topright;
+            this.botLeft = botleft;
+            this.botRight = botright;
         }
-        operate.put(methodName, params);
     }
 }
