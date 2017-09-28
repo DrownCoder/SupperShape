@@ -47,6 +47,8 @@ public class ShapeListBuilder {
         addShape(mTemplate);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             v.setBackground(drawable);
+        }else{
+            v.setBackgroundDrawable(drawable);
         }
     }
 }
