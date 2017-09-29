@@ -13,6 +13,7 @@ import android.view.View;
 public class ShapeBuilder{
     private GradientDrawable drawable;
     private AttrContainer container;
+    private boolean isOperate;
     public ShapeBuilder() {
         drawable = new GradientDrawable();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -189,6 +190,7 @@ public class ShapeBuilder{
             drawable.setOrientation(orientation);
             drawable.setColors(new int[]{startColor, centerColor, endColor});
         } else {
+            isOperate = true;
             drawable = new GradientDrawable(orientation, new int[]{startColor, centerColor,
                     endColor});
         }
@@ -273,7 +275,9 @@ public class ShapeBuilder{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             return drawable;
         } else {
-            operateMethod();
+            if (isOperate) {
+                operateMethod();
+            }
         }
         return drawable;
     }
