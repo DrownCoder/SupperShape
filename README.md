@@ -183,7 +183,7 @@ public ShapeBuilder Stroke(int px, int color, int dashWidth, int dashGap)
      */
     public ShapeListBuilder addShape(Drawable shape, int... state)
 ```
-**（这里要注意添加的顺序，只要有一个状态与之相配，背景就会被换掉。所以不要把大范围放在前面了，会造成没有什么效果了。）**
+**（这里要注意添加的顺序，只要有一个状态与之相配，背景就会被换掉。所以不要把大范围放在前面了，会造成没有什么效果了。）**  
 3.build(View)即可
 ### 三、LayerBuilder替代Layer-list
 #### Demo
