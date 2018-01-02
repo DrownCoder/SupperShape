@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SupperShape.iml" filepath="$PROJECT_DIR$/SupperShape.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/easywidget/easywidget.iml" filepath="$PROJECT_DIR$/easywidget/easywidget.iml" />
       <module fileurl="file://$PROJECT_DIR$/shapebuilder/shapebuilder.iml" filepath="$PROJECT_DIR$/shapebuilder/shapebuilder.iml" />
     </modules>
   </component>
