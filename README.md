@@ -1,9 +1,11 @@
 通过封装GradientDrawable、StateListDrawable 、LayerDrawable 代替每次都需要创建一个shape.xml的不便，一定程度上也可以减少apk体积，并且使用简单。
 
 ## 功能
-1.支持shape的绝大部分常用属性。  
-2.可代替Selector  
-3.可代替Layer-list
+* 不用再写shape.xml文件了！！！
+* 链式调用
+* 涵盖Shape几乎常用的所有属性，如：TYPE，Radius，Stroke，Solid，Gradient，GradientType，GradientCenter，GradientRadius，size
+* 支持Selector
+* 支持Layer-list
 
 ## How to：
 **Step 1. Add the JitPack repository to your build file** 
@@ -21,7 +23,7 @@ Step 2. Add the dependency
 
 ```
 dependencies {
-	        compile 'com.github.sdfdzx:SupperShape:v1.0.0'
+	        compile 'com.github.sdfdzx:SupperShape:v1.0.1'
 	}
 ```
 
@@ -31,7 +33,7 @@ dependencies {
 ```
 ShapeBuilder.create()
             .Type(RECTANGLE)
-            .Soild(Color.RED)
+            .Solid(Color.RED)
             .Stroke(5,Color.BLACK)
             .build(View);
 ```
@@ -55,13 +57,13 @@ Type(int type)
 public ShapeBuilder Stroke(int px, int color) 
 public ShapeBuilder Stroke(int px, int color, int dashWidth, int dashGap)
 ```
-3.Soild填充属性
+3.Solid填充属性
 ```
     /**
      *
      * @param color -背景颜色
      */
-    public ShapeBuilder Soild(int color)
+    public ShapeBuilder Solid(int color)
 ```
 4.Radius圆角属性
 ```
@@ -150,13 +152,13 @@ public ShapeBuilder Stroke(int px, int color, int dashWidth, int dashGap)
 ```
         ShapeBuilder builder1 = ShapeBuilder.create()
                 .Type(RECTANGLE)
-                .Soild(Color.RED);
+                .Solid(Color.RED);
         ShapeBuilder builder2 = ShapeBuilder.create()
                 .Type(RECTANGLE)
-                .Soild(Color.RED);
+                .Solid(Color.RED);
 
         ShapeListBuilder.create(builder1.build())
-                .addShape(builder2.Soild(Color.BLUE).build(), android.R.attr.state_selected)
+                .addShape(builder2.Solid(Color.BLUE).build(), android.R.attr.state_selected)
                 .build(findViewById(R.id.tv1));
 
         findViewById(R.id.tv1).setOnClickListener(new View.OnClickListener() {
