@@ -26,6 +26,7 @@ dependencies {
 	        compile 'com.github.sdfdzx:SupperShape:v1.0.2'
 	}
 ```
+![效果](https://github.com/sdfdzx/SupperShape/blob/master/demo.gif)
 
 ## 使用
 ### 一、ShapeBuilder代替shape。
