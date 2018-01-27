@@ -1,1 +1,1 @@
-include ':app', ':shapebuilder', ':easywidget'
+include ':app', ':shapebuilder'

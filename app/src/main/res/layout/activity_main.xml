@@ -22,7 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="38sp"
-        android:text="TEXT2"
+        android:text="T"
+        android:padding="10dp"
         android:textColor="#000000"
         />
     <TextView
@@ -31,23 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="38sp"
-        android:text="TEXT2"
+        android:text="TEXT3"
         android:textColor="#000000"
-        />
-    <com.study.xuan.easywidget.EasyTextView
-        android:id="@+id/easyText"
-        android:layout_marginTop="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/icon_font_home"
-        android:textSize="38dp"
-        android:textColor="#000000"
-        app:totalRadius="5dp"
-        app:textRight="300"
-        app:textPadding="30dp"
-        android:padding="10dp"
-        app:strokeColor="@color/colorAccent"
-        app:strokeWidth="2dp"
-        app:iconColor="@color/colorPrimary"
         />
 </LinearLayout>

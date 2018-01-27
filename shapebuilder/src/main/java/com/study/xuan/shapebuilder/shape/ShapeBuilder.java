@@ -10,11 +10,11 @@ import android.view.View;
  * Description :封装GradientDrawable替代用shape.xml，减小apk体积
  */
 
-public class ShapeBuilder{
+public class ShapeBuilder implements IShape{
     private GradientDrawable drawable;
     private AttrContainer container;
     private boolean isOperate;
-    public ShapeBuilder() {
+    private ShapeBuilder() {
         drawable = new GradientDrawable();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             container = new AttrContainer();
@@ -45,7 +45,7 @@ public class ShapeBuilder{
     public ShapeBuilder Stroke(int px, int color) {
         drawable.setStroke(px, color);
         if (container != null) {
-            container.stokewidth = px;
+            container.strokeWidth = px;
             container.stokeColor = color;
         }
         return this;
@@ -61,7 +61,7 @@ public class ShapeBuilder{
     public ShapeBuilder Stroke(int px, int color, int dashWidth, int dashGap) {
         drawable.setStroke(px, color, dashWidth, dashGap);
         if (container != null) {
-            container.stokewidth = px;
+            container.strokeWidth = px;
             container.stokeColor = color;
             container.dashWidth = dashWidth;
             container.dashGap = dashGap;
@@ -73,10 +73,10 @@ public class ShapeBuilder{
      *
      * @param color -背景颜色
      */
-    public ShapeBuilder Soild(int color) {
+    public ShapeBuilder Solid(int color) {
         drawable.setColor(color);
         if (container != null) {
-            container.soild = color;
+            container.solid = color;
         }
         return this;
     }
@@ -203,7 +203,6 @@ public class ShapeBuilder{
      * @param type linear (default.)-LINEAR_GRADIENT
      *             circular-RADIAL_GRADIENT
      *             sweep-SWEEP_GRADIENT
-     * @return
      */
     public ShapeBuilder GradientType(int type) {
         drawable.setGradientType(type);
@@ -217,7 +216,6 @@ public class ShapeBuilder{
      *  这两个属性只有在type不为linear情况下起作用。
      * @param x 相对X的渐变位置
      * @param y 相对Y的渐变位置
-     * @return
      */
     public ShapeBuilder GradientCenter(float x, float y) {
         drawable.setGradientCenter(x, y);
@@ -231,12 +229,11 @@ public class ShapeBuilder{
     /**
      * 该属性只有在type="radial"有效
      * @param radius 渐变颜色的半径
-     * @return
      */
     public ShapeBuilder GradientRadius(float radius) {
         drawable.setGradientRadius(radius);
         if (container != null) {
-            container.gradinetRadius = radius;
+            container.gradientRadius = radius;
         }
         return this;
     }
@@ -245,7 +242,6 @@ public class ShapeBuilder{
      * 设置size
      * @param width 宽
      * @param height 高
-     * @return
      */
     public ShapeBuilder setSize(int width, int height) {
         drawable.setSize(width, height);
@@ -288,32 +284,32 @@ public class ShapeBuilder{
     private void operateMethod() {
         if (container != null) {
             this.Type(container.type)
-                .Stroke(container.stokewidth, container.stokeColor, container.dashWidth,
+                .Stroke(container.strokeWidth, container.stokeColor, container.dashWidth,
                             container.dashGap)
                 .Radius(container.topLeft,container.topRight,container.botLeft,container.botRight)
                 .setSize(container.width,container.height)
                 .GradientType(container.gradientType)
                 .GradientCenter(container.gradientCenterX,container.gradientCenterY)
-                .GradientRadius(container.gradinetRadius);
-            if (container.soild != 0) {
-                Soild(container.soild);
+                .GradientRadius(container.gradientRadius);
+            if (container.solid != 0) {
+                Solid(container.solid);
             }
         }
     }
 
     private class AttrContainer {
-        public int type;
-        public int stokewidth;
-        public int stokeColor;
-        public int dashWidth;
-        public int dashGap;
-        public int soild;
-        public float topLeft, topRight, botLeft, botRight;
-        public int width, height;
-        public int gradientType;
-        public float gradinetRadius;
+        private int type;
+        private int strokeWidth;
+        private int stokeColor;
+        private int dashWidth;
+        private int dashGap;
+        private int solid;
+        private float topLeft, topRight, botLeft, botRight;
+        private int width, height;
+        private int gradientType;
+        private float gradientRadius;
 
-        public float gradientCenterX, gradientCenterY;
+        private float gradientCenterX, gradientCenterY;
 
         private void setRadius(float topleft, float topright, float botleft, float botright) {
             this.topLeft = topleft;
