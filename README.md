@@ -6,7 +6,8 @@
 ![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)
 
 
-基于此项目拓展的多功能[EastTextView](https://github.com/DrownCoder/EasyTextView)以开源，欢迎使用
+基于此项目拓展的多功能[EastTextView](https://github.com/DrownCoder/EasyTextView)已开源，欢迎使用
+>一个基于iconfont拓展的支持多种功能的轻量级TextView，减少布局嵌套，减少定义shape文件，基本涵盖常规需要多个TextView实现的功能。
 
 ## 功能
 * 不用再写shape.xml文件了！！！
