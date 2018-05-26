@@ -1,4 +1,12 @@
-通过封装GradientDrawable、StateListDrawable 、LayerDrawable 代替每次都需要创建一个shape.xml的不便，一定程度上也可以减少apk体积，并且使用简单。
+
+通过封装GradientDrawable、StateListDrawable 、LayerDrawable 代替每次都需要创建一个shape.xml的不便，一定程度上也可以减少apk体积，并且使用简单。  
+
+![Wercker](https://img.shields.io/wercker/ci/wercker/docs.svg)
+[![](https://jitpack.io/v/DrownCoder/SupperShape.svg)](https://jitpack.io/#DrownCoder/SupperShape)
+![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)
+
+
+基于此项目拓展的多功能[EastTextView](https://github.com/DrownCoder/EasyTextView)以开源，欢迎使用
 
 ## 功能
 * 不用再写shape.xml文件了！！！
@@ -208,3 +216,20 @@ public LayerBuilder Bottom(int index, int px)
 public LayerBuilder setInset(int index,int left,int top,int right,int bottom)
 ```
 3.build(View)即可
+
+### License
+```
+Copyright 2017 [DrownCoder] 
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
