@@ -10,7 +10,7 @@ import android.view.View;
  * Description :封装GradientDrawable替代用shape.xml，减小apk体积
  */
 
-public class ShapeBuilder implements IShape{
+public class ShapeBuilder{
     private GradientDrawable drawable;
     private AttrContainer container;
     private boolean isOperate;
@@ -65,6 +65,19 @@ public class ShapeBuilder implements IShape{
             container.stokeColor = color;
             container.dashWidth = dashWidth;
             container.dashGap = dashGap;
+        }
+        return this;
+    }
+
+    /**
+     * 使用Solid(int color)方法
+     * @param color -背景颜色
+     */
+    @Deprecated
+    public ShapeBuilder Soild(int color) {
+        drawable.setColor(color);
+        if (container != null) {
+            container.solid = color;
         }
         return this;
     }
@@ -197,6 +210,21 @@ public class ShapeBuilder implements IShape{
         return this;
     }
 
+    /**
+     * 兼容低版本，重新构造drawable，对应调用operateMethod方法重新build，
+     * 保证新的drawable与原始drawabel相同
+     */
+    public ShapeBuilder GradientInit(GradientDrawable.Orientation orientation, int... colors) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            drawable.setOrientation(orientation);
+            drawable.setColors(colors);
+        } else {
+            isOperate = true;
+            drawable = new GradientDrawable(orientation, colors);
+        }
+        return this;
+    }
+
 
     /**
      * 渐变type
@@ -264,6 +292,10 @@ public class ShapeBuilder implements IShape{
         }
     }
 
+    public static void clearBg(View v) {
+        v.setBackgroundResource(0);
+    }
+
     /**
      * 返回构建的drawable
      */
@@ -284,13 +316,13 @@ public class ShapeBuilder implements IShape{
     private void operateMethod() {
         if (container != null) {
             this.Type(container.type)
-                .Stroke(container.strokeWidth, container.stokeColor, container.dashWidth,
+                    .Stroke(container.strokeWidth, container.stokeColor, container.dashWidth,
                             container.dashGap)
-                .Radius(container.topLeft,container.topRight,container.botLeft,container.botRight)
-                .setSize(container.width,container.height)
-                .GradientType(container.gradientType)
-                .GradientCenter(container.gradientCenterX,container.gradientCenterY)
-                .GradientRadius(container.gradientRadius);
+                    .Radius(container.topLeft,container.topRight,container.botLeft,container.botRight)
+                    .setSize(container.width,container.height)
+                    .GradientType(container.gradientType)
+                    .GradientCenter(container.gradientCenterX,container.gradientCenterY)
+                    .GradientRadius(container.gradientRadius);
             if (container.solid != 0) {
                 Solid(container.solid);
             }
@@ -298,18 +330,18 @@ public class ShapeBuilder implements IShape{
     }
 
     private class AttrContainer {
-        private int type;
-        private int strokeWidth;
-        private int stokeColor;
-        private int dashWidth;
-        private int dashGap;
-        private int solid;
-        private float topLeft, topRight, botLeft, botRight;
-        private int width, height;
-        private int gradientType;
-        private float gradientRadius;
+        public int type;
+        public int strokeWidth;
+        public int stokeColor;
+        public int dashWidth;
+        public int dashGap;
+        public int solid;
+        public float topLeft, topRight, botLeft, botRight;
+        public int width, height;
+        public int gradientType;
+        public float gradientRadius;
 
-        private float gradientCenterX, gradientCenterY;
+        public float gradientCenterX, gradientCenterY;
 
         private void setRadius(float topleft, float topright, float botleft, float botright) {
             this.topLeft = topleft;
