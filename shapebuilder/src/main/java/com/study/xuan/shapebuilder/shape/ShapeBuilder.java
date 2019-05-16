@@ -45,7 +45,7 @@ public class ShapeBuilder{
     public ShapeBuilder Stroke(int px, int color) {
         drawable.setStroke(px, color);
         if (container != null) {
-            container.strokeWidth = px;
+            container.stokewidth = px;
             container.stokeColor = color;
         }
         return this;
@@ -61,7 +61,7 @@ public class ShapeBuilder{
     public ShapeBuilder Stroke(int px, int color, int dashWidth, int dashGap) {
         drawable.setStroke(px, color, dashWidth, dashGap);
         if (container != null) {
-            container.strokeWidth = px;
+            container.stokewidth = px;
             container.stokeColor = color;
             container.dashWidth = dashWidth;
             container.dashGap = dashGap;
@@ -70,26 +70,13 @@ public class ShapeBuilder{
     }
 
     /**
-     * 使用Solid(int color)方法
-     * @param color -背景颜色
-     */
-    @Deprecated
-    public ShapeBuilder Soild(int color) {
-        drawable.setColor(color);
-        if (container != null) {
-            container.solid = color;
-        }
-        return this;
-    }
-
-    /**
      *
      * @param color -背景颜色
      */
-    public ShapeBuilder Solid(int color) {
+    public ShapeBuilder Soild(int color) {
         drawable.setColor(color);
         if (container != null) {
-            container.solid = color;
+            container.soild = color;
         }
         return this;
     }
@@ -112,10 +99,29 @@ public class ShapeBuilder{
      * @param topright 右上
      * @param botleft 左下
      * @param botright 右下
+     *
+     * @Deprecated 左下和右下颠倒了，换用RoundRadius()方法
      */
+    @Deprecated
     public ShapeBuilder Radius(float topleft, float topright, float botleft, float botright) {
         drawable.setCornerRadii(new float[]{topleft, topleft, topright, topright, botleft,
                 botleft, botright, botright});
+        if (container != null) {
+            container.setRadius(topleft, topright, botleft, botright);
+        }
+        return this;
+    }
+
+    /**
+     * 圆角
+     * @param topleft 左上
+     * @param topright 右上
+     * @param botleft 左下
+     * @param botright 右下
+     */
+    public ShapeBuilder RoundRadius(float topleft, float topright, float botleft, float botright) {
+        drawable.setCornerRadii(new float[]{topleft, topleft, topright, topright, botright,
+                botright, botleft, botleft});
         if (container != null) {
             container.setRadius(topleft, topright, botleft, botright);
         }
@@ -231,6 +237,7 @@ public class ShapeBuilder{
      * @param type linear (default.)-LINEAR_GRADIENT
      *             circular-RADIAL_GRADIENT
      *             sweep-SWEEP_GRADIENT
+     * @return
      */
     public ShapeBuilder GradientType(int type) {
         drawable.setGradientType(type);
@@ -244,6 +251,7 @@ public class ShapeBuilder{
      *  这两个属性只有在type不为linear情况下起作用。
      * @param x 相对X的渐变位置
      * @param y 相对Y的渐变位置
+     * @return
      */
     public ShapeBuilder GradientCenter(float x, float y) {
         drawable.setGradientCenter(x, y);
@@ -257,11 +265,12 @@ public class ShapeBuilder{
     /**
      * 该属性只有在type="radial"有效
      * @param radius 渐变颜色的半径
+     * @return
      */
     public ShapeBuilder GradientRadius(float radius) {
         drawable.setGradientRadius(radius);
         if (container != null) {
-            container.gradientRadius = radius;
+            container.gradinetRadius = radius;
         }
         return this;
     }
@@ -270,6 +279,7 @@ public class ShapeBuilder{
      * 设置size
      * @param width 宽
      * @param height 高
+     * @return
      */
     public ShapeBuilder setSize(int width, int height) {
         drawable.setSize(width, height);
@@ -316,30 +326,30 @@ public class ShapeBuilder{
     private void operateMethod() {
         if (container != null) {
             this.Type(container.type)
-                    .Stroke(container.strokeWidth, container.stokeColor, container.dashWidth,
+                    .Stroke(container.stokewidth, container.stokeColor, container.dashWidth,
                             container.dashGap)
                     .Radius(container.topLeft,container.topRight,container.botLeft,container.botRight)
                     .setSize(container.width,container.height)
                     .GradientType(container.gradientType)
                     .GradientCenter(container.gradientCenterX,container.gradientCenterY)
-                    .GradientRadius(container.gradientRadius);
-            if (container.solid != 0) {
-                Solid(container.solid);
+                    .GradientRadius(container.gradinetRadius);
+            if (container.soild != 0) {
+                Soild(container.soild);
             }
         }
     }
 
     private class AttrContainer {
         public int type;
-        public int strokeWidth;
+        public int stokewidth;
         public int stokeColor;
         public int dashWidth;
         public int dashGap;
-        public int solid;
+        public int soild;
         public float topLeft, topRight, botLeft, botRight;
         public int width, height;
         public int gradientType;
-        public float gradientRadius;
+        public float gradinetRadius;
 
         public float gradientCenterX, gradientCenterY;
 
