@@ -32,7 +32,7 @@ Step 2. Add the dependency
 
 ```
 dependencies {
-	        compile 'com.github.sdfdzx:SupperShape:v1.0.2'
+	        compile 'com.github.sdfdzx:SupperShape:v1.0.4'
 	}
 ```
 ![效果](https://github.com/sdfdzx/SupperShape/blob/master/demo.gif)
